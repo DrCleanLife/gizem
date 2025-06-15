@@ -63,8 +63,8 @@ for i, urun in enumerate(st.session_state.urunler):
             try:
                 with st.spinner("Görsel üretiliyor..."):
                     output = replicate.run(
-                        "lucataco/realistic-product-photo:dbdd4e741ea7128b564d180cf6ee1a7e122b0f0f3eb4698f58cc53c84b7c8434",
-                        input={
+    "cjwbw/dreamshaper:cc6af9c6e19e285b8e69a7d6ff60f46a3a7c3b6ea408fddaa820b04ac057d965",
+    input={
                             "prompt": f"{urun['urun_adi']}, {urun['aciklama']}, studio lighting, white background",
                             "width": 512,
                             "height": 512,
