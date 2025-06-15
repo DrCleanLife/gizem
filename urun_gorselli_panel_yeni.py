@@ -59,7 +59,7 @@ for i, urun in enumerate(st.session_state.urunler):
             try:
                 with st.spinner("Görsel üretiliyor..."):
                     output = replicate.run(
-                        "cjwbw/dreamshaper:cc6af9c6e19e285b8e69a7d6ff60f46a3a7c3b6ea408fddaa820b04ac057d965",
+                        "stability-ai/sdxl:ea1f5f63c0e2c1739cdbc6a8d7b5f9058a256ab41f21e5c3335c1a0bfa1e236e",
                         input={
                             "prompt": f"{urun['urun_adi']}, {urun['aciklama']}, studio lighting, white background",
                             "width": 512,
