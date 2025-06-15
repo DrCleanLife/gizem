@@ -62,15 +62,10 @@ for i, urun in enumerate(st.session_state.urunler):
         if st.button(f"🖼 Görsel Üret", key=f"gorsel_{i}"):
             try:
                 with st.spinner("Görsel üretiliyor..."):
-                    output = replicate.run(
+   output = replicate.run(
     "cjwbw/dreamshaper:cc6af9c6e19e285b8e69a7d6ff60f46a3a7c3b6ea408fddaa820b04ac057d965",
-    input={
-                            "prompt": f"{urun['urun_adi']}, {urun['aciklama']}, studio lighting, white background",
-                            "width": 512,
-                            "height": 512,
-                            "num_outputs": 1
-                        }
-                    )
+    input={"prompt": prompt, "width": 512, "height": 512}
+)
                     urun["gorsel_url"] = output[0]
                     st.image(output[0], caption="Üretilen Görsel", width=300)
                     st.success("✅ Görsel üretildi!")
