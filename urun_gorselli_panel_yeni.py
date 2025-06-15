@@ -76,7 +76,7 @@ if "urunler" in st.session_state:
                             "product_type": "AI Ürünü",
                             "tags": ["trend", "tiktok", "AI", "otomatik"],
                             "images": [{"src": urun.get("gorsel_url", "")}],
-                            "variants": [{"price": "149.90", "sku": f"AI-{i+1}"}]
+                            "variants": [{"price": "149.90", "sku": "fAI-{}".format(i+1)}]
                         }
                     }
                     yanit = requests.post(
