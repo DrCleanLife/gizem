@@ -74,9 +74,9 @@ for i, urun in enumerate(st.session_state.urunler):
             urun["gorsel_url"] = output[0]
             st.image(output[0], caption="🖼 Üretilen Görsel", width=300)
             st.success("✅ Görsel başarıyla üretildi.")
-    except Exception as e:
-        st.error("❌ Replicate Hatası:")
-        st.code(str(e))
+            except Exception as e:
+            st.error("❌ Replicate Hatası:")
+            st.code(str(e))
 
         # Shopify’a yükle
         if st.button(f"📦 Shopify’a Yükle", key=f"yukle_{i}"):
