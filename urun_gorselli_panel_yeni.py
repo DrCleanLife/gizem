@@ -9,7 +9,7 @@ st.set_page_config(page_title="AI Görselli Ürün Paneli", layout="centered")
 st.title("🧠 Görselli AI Ürün Paneli (OpenAI + Replicate + Shopify)")
 
 # Trend girdisi
-trend_konu = st.text_input("📝 Trend Konusu ("""örn: TikTok'ta viral olanlar""")")
+trend_konu = st.text_input("📝 Trend Konusu (\"\u00f6rn: TikTok'ta viral olanlar\")")
 
 # GPT ile ürünleri oluştur
 if st.button("🍭 3 Ürün Oluştur"):
