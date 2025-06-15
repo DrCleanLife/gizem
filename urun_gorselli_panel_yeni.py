@@ -9,7 +9,7 @@ st.set_page_config(page_title="AI Görselli Ürün Paneli", layout="centered")
 st.title("🧠 Görselli AI Ürün Paneli (OpenAI + Replicate + Shopify)")
 
 # Trend girdisi
-trend_konu = st.text_input("📝 Trend Konusu (\"\u00f6rn: TikTok'ta viral olanlar\")")
+trend_konu = st.text_input("📝 Trend Konusu (\"örn: TikTok'ta viral olanlar\")")
 
 # GPT ile ürünleri oluştur
 if st.button("🍭 3 Ürün Oluştur"):
@@ -21,7 +21,7 @@ if st.button("🍭 3 Ürün Oluştur"):
           {{"urun_adi": "...", "aciklama": "...", "seo_aciklama": "..."}},
           ...
         ]
-        Sadece JSON olarak yanıt ver."
+        Sadece JSON olarak yanıt ver."""
 
         response = openai_client.chat.completions.create(
             model="gpt-4",
@@ -68,6 +68,7 @@ if "urunler" in st.session_state:
             # Shopify'a yükle
             if st.button(f"🛒 Shopify'a Yükle", key=f"yukle_{i}"):
                 try:
+                    sku_kodu = f"fAI-{i+1}"  # 💡 f-string burada dışta tanımlandı
                     veri = {
                         "product": {
                             "title": urun["urun_adi"],
@@ -76,7 +77,7 @@ if "urunler" in st.session_state:
                             "product_type": "AI Ürünü",
                             "tags": ["trend", "tiktok", "AI", "otomatik"],
                             "images": [{"src": urun.get("gorsel_url", "")}],
-                            "variants": [{"price": "149.90", "sku": "fAI-{}".format(i+1)}]
+                            "variants": [{"price": "149.90", "sku": sku_kodu}]
                         }
                     }
                     yanit = requests.post(
