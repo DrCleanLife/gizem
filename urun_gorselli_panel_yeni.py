@@ -36,6 +36,27 @@ if st.button("🍭 3 Ürün Oluştur"):
         st.error("❌ GPT Hatası:")
         st.code(str(e))
 
+# Toplu görsel üret
+if "urunler" in st.session_state and st.button("🖼️ Tüm Görselleri Üret"):
+    replicate_client = replicate.Client(api_token=st.secrets["REPLICATE_API_TOKEN"])
+    for i, urun in enumerate(st.session_state.urunler):
+        try:
+            with st.spinner(f"{urun['urun_adi']} için görsel üretiliyor..."):
+                output = replicate_client.run(
+                    "stability-ai/sdxl:7762fd07cf82c948538e41f63f77d685e02b063e37e496e96eefd46c929f9bdc",
+                    input={
+                        "prompt": f"{urun['urun_adi']}, {urun['aciklama']}, studio lighting, white background",
+                        "num_outputs": 1,
+                        "width": 512,
+                        "height": 512
+                    }
+                )
+                urun["gorsel_url"] = str(output[0])
+                st.image(str(output[0]), caption=urun['urun_adi'], width=300)
+        except Exception as e:
+            st.error(f"❌ {urun['urun_adi']} için Replicate Hatası:")
+            st.code(str(e))
+
 # Ürünleri ve butonları listele
 if "urunler" in st.session_state:
     for i, urun in enumerate(st.session_state.urunler):
@@ -44,7 +65,7 @@ if "urunler" in st.session_state:
             st.write("📄", urun["aciklama"])
             st.write("🔍", urun["seo_aciklama"])
 
-            # Görsel Üret
+            # Tekli görsel üret
             replicate_client = replicate.Client(api_token=st.secrets["REPLICATE_API_TOKEN"])
             if st.button(f"🎨 Görsel Üret", key=f"gorsel_{i}"):
                 try:
@@ -68,7 +89,7 @@ if "urunler" in st.session_state:
             # Shopify'a yükle
             if st.button(f"🛒 Shopify'a Yükle", key=f"yukle_{i}"):
                 try:
-                    sku_kodu = f"fAI-{i+1}"  # 💡 f-string burada dışta tanımlandı
+                    sku_kodu = f"fAI-{i+1}"
                     veri = {
                         "product": {
                             "title": urun["urun_adi"],
