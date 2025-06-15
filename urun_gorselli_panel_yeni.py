@@ -4,18 +4,16 @@ import json
 import replicate
 from openai import OpenAI
 
-# 🔐 API ANAHTARLARIN
+# API anahtarlarını gizli olarak secrets üzerinden alıyoruz
 openai_client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 REPLICATE_API_TOKEN = st.secrets["REPLICATE_API_TOKEN"]
 SHOPIFY_STORE_URL = st.secrets["SHOPIFY_STORE_URL"]
-ACCESS_TOKEN = st.secrets["ACCESS_TOKEN"]             
-
-replicate.Client(api_token=REPLICATE_API_TOKEN)
+ACCESS_TOKEN = st.secrets["ACCESS_TOKEN"]
 
 st.set_page_config(page_title="AI Görselli Ürün Paneli", page_icon="🧠")
-st.title("🧠 Görselli AI Ürün Paneli (OpenAI v1)")
+st.title("🧠 Görselli AI Ürün Paneli (OpenAI + Replicate + Shopify)")
 
-trend = st.text_input("📈 Trend Konusu (örn: TikTok’ta viral ürünler)")
+trend = st.text_input("📈 Trend Konusu (örn: TikTok’ta viral olanlar)")
 
 if "urunler" not in st.session_state:
     st.session_state.urunler = []
@@ -25,17 +23,15 @@ if st.button("🎯 3 Ürün Oluştur"):
         st.warning("Lütfen trend konusu girin.")
     else:
         prompt = f"""
-        '{trend}' konusuna göre 3 ürün öner, aşağıdaki JSON yapısında sadece veri döndür:
+        '{trend}' konusuna göre 3 yaratıcı e-ticaret ürünü öner. Aşağıdaki formatta yalnızca JSON verisi döndür:
 
         [
           {{
-            "urun_adi": "Mini Katlanabilir Su Şişesi",
-            "aciklama": "Bu ürün hafif, taşınabilir ve doğaya uygun...",
-            "seo_aciklama": "TikTok’ta popüler katlanabilir su şişesi ile sağlıklı yaşamı yanına al..."
-          }},
-          ...
+            "urun_adi": "Minimalist LED Masa Lambası",
+            "aciklama": "Estetik görünümlü, dokunmatik sensörlü LED masa lambası...",
+            "seo_aciklama": "Modern evler için ideal minimalist LED masa lambası. TikTok’ta viral oldu."
+          }}
         ]
-        Lütfen sadece JSON verisi döndür.
         """
         try:
             response = openai_client.chat.completions.create(
@@ -51,7 +47,7 @@ if st.button("🎯 3 Ürün Oluştur"):
             st.error("❌ GPT Hatası:")
             st.code(str(e))
 
-# Ürün kartları ve görsel üretimi
+# Ürünleri ve butonları listele
 for i, urun in enumerate(st.session_state.urunler):
     with st.container():
         st.subheader(f"🛍️ {urun['urun_adi']}")
@@ -62,10 +58,15 @@ for i, urun in enumerate(st.session_state.urunler):
         if st.button(f"🖼 Görsel Üret", key=f"gorsel_{i}"):
             try:
                 with st.spinner("Görsel üretiliyor..."):
-   output = replicate.run(
-    "cjwbw/dreamshaper:cc6af9c6e19e285b8e69a7d6ff60f46a3a7c3b6ea408fddaa820b04ac057d965",
-    input={"prompt": prompt, "width": 512, "height": 512}
-)
+                    output = replicate.run(
+                        "cjwbw/dreamshaper:cc6af9c6e19e285b8e69a7d6ff60f46a3a7c3b6ea408fddaa820b04ac057d965",
+                        input={
+                            "prompt": f"{urun['urun_adi']}, {urun['aciklama']}, studio lighting, white background",
+                            "width": 512,
+                            "height": 512,
+                            "num_outputs": 1
+                        }
+                    )
                     urun["gorsel_url"] = output[0]
                     st.image(output[0], caption="Üretilen Görsel", width=300)
                     st.success("✅ Görsel üretildi!")
@@ -80,12 +81,12 @@ for i, urun in enumerate(st.session_state.urunler):
                     "title": urun["urun_adi"],
                     "body_html": f"{urun['aciklama']}<br>{urun['seo_aciklama']}",
                     "vendor": "DrCleanNano",
-                    "product_type": "AI Görselli Ürün",
-                    "tags": ["trend", "görselli", "ai"],
+                    "product_type": "AI Ürün",
+                    "tags": ["trend", "AI", "görselli"],
                     "images": [{"src": urun.get("gorsel_url", "")}],
                     "variants": [{
                         "price": "199.99",
-                        "sku": f"AIGRS{i+1}",
+                        "sku": f"AIGPT{i+1}",
                         "inventory_management": "shopify",
                         "inventory_quantity": 10
                     }]
@@ -96,7 +97,7 @@ for i, urun in enumerate(st.session_state.urunler):
                 "X-Shopify-Access-Token": ACCESS_TOKEN
             }
             r = requests.post(
-                f"{SHOPIFY_STORE_URL}/admin/api/2023-10/products.json",
+                f"{SHOPIFY_STORE_URL}/products.json",
                 headers=headers,
                 data=json.dumps(data)
             )
