@@ -3,6 +3,9 @@ import requests
 import json
 import replicate
 from openai import OpenAI
+import replicate
+replicate.Client(api_token=st.secrets["REPLICATE_API_TOKEN"])
+
 
 # API anahtarlarını gizli olarak secrets üzerinden alıyoruz
 openai_client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
