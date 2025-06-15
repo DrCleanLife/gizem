@@ -50,7 +50,7 @@ if "urunler" in st.session_state:
                 try:
                     with st.spinner("Görsel üretiliyor..."):
                         output = replicate_client.run(
-                            "stability-ai/stable-diffusion-xl",
+                            "stability-ai/sdxl:db21e45a14820d682b3a1f8b33c77f1c6a3f3f122ac7fb32c73b9e51d7bdc631",
                             input={
                                 "prompt": f"{urun['urun_adi']}, {urun['aciklama']}, studio lighting, white background",
                                 "num_outputs": 1,
