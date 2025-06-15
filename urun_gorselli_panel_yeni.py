@@ -8,7 +8,7 @@ from openai import OpenAI
 openai_client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 REPLICATE_API_TOKEN = st.secrets["REPLICATE_API_TOKEN"]
 SHOPIFY_STORE_URL = st.secrets["SHOPIFY_STORE_URL"]
-ACCESS_TOKEN = st.secrets["SHOPIFY_ACCESS_TOKEN"]             
+ACCESS_TOKEN = st.secrets["ACCESS_TOKEN"]             
 
 replicate.Client(api_token=REPLICATE_API_TOKEN)
 
