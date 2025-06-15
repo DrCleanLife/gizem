@@ -56,9 +56,8 @@ for i, urun in enumerate(st.session_state.urunler):
         st.write("🔍", urun["seo_aciklama"])
 
         # Görsel üret
-      import replicate
+     
 replicate_client = replicate.Client(api_token=st.secrets["REPLICATE_API_TOKEN"])
-
 if st.button(f"🖼 Görsel Üret", key=f"gorsel_{i}"):
     try:
         with st.spinner("Görsel üretiliyor..."):
