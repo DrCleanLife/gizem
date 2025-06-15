@@ -62,14 +62,15 @@ if st.button(f"🖼 Görsel Üret", key=f"gorsel_{i}"):
     try:
         with st.spinner("Görsel üretiliyor..."):
             output = replicate_client.run(
-                "stability-ai/sdxl:ea1f5f63c0e2c1739cdbc6a8d7b5f9058a256ab41f21e5c3335c1a0bfa1e236e",
-                input={
-                    "prompt": f"{urun['urun_adi']}, {urun['aciklama']}, studio lighting, white background",
-                    "num_outputs": 1,
-                    "width": 512,
-                    "height": 512
-                }
-            )
+    "stability-ai/stable-diffusion-xl", 
+    input={
+        "prompt": f"{urun['urun_adi']}, {urun['aciklama']}, studio lighting, white background",
+        "num_outputs": 1,
+        "width": 512,
+        "height": 512
+    }
+)
+
             urun["gorsel_url"] = output[0]
             st.image(output[0], caption="🖼 Üretilen Görsel", width=300)
             st.success("✅ Görsel başarıyla üretildi.")
