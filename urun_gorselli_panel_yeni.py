@@ -57,19 +57,19 @@ for i, urun in enumerate(st.session_state.urunler):
 
         # Görsel üret
      
-replicate_client = replicate.Client(api_token=st.secrets["REPLICATE_API_TOKEN"])
-if st.button(f"🖼 Görsel Üret", key=f"gorsel_{i}"):
-    try:
-        with st.spinner("Görsel üretiliyor..."):
-            output = replicate_client.run(
-    "stability-ai/stable-diffusion-xl", 
-    input={
-        "prompt": f"{urun['urun_adi']}, {urun['aciklama']}, studio lighting, white background",
-        "num_outputs": 1,
-        "width": 512,
-        "height": 512
-    }
-)
+        replicate_client = replicate.Client(api_token=st.secrets["REPLICATE_API_TOKEN"])
+        if st.button(f"🖼 Görsel Üret", key=f"gorsel_{i}"):
+          try:
+            with st.spinner("Görsel üretiliyor..."):
+              output = replicate_client.run(
+                "stability-ai/stable-diffusion-xl", 
+                input={
+                  "prompt": f"{urun['urun_adi']}, {urun['aciklama']}, studio lighting, white background",
+                  "num_outputs": 1,
+                  "width": 512,
+                  "height": 512
+                      }
+                   )
 
             urun["gorsel_url"] = output[0]
             st.image(output[0], caption="🖼 Üretilen Görsel", width=300)
