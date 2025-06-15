@@ -9,6 +9,8 @@ import pandas as pd
 from datetime import datetime
 from pathlib import Path
 
+st.set_page_config(page_title="🧠 AI Ürün Paneli", layout="wide")
+
 # --- Kullanıcı Girişi ---
 st.sidebar.title("🔐 Giriş Paneli")
 username = st.sidebar.text_input("Kullanıcı Adı")
@@ -26,7 +28,7 @@ if not st.session_state.get("giris_yapildi"):
     st.warning("Lütfen sol menüden giriş yapın.")
     st.stop()
 
-st.set_page_config(page_title="🧠 AI Ürün Paneli", layout="wide")
+
 st.title("🧠 AI Ürün Paneli (Geçmiş Kayıtlı)")
 st.markdown("#### 🧾 Trend Konusu (örn: TikTok'ta viral olanlar)")
 trend_konu = st.text_input("📌 Trend Konusu")
