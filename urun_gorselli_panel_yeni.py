@@ -58,8 +58,8 @@ if "urunler" in st.session_state:
                                 "height": 512
                             }
                         )
-                    urun["gorsel_url"] = output[0]
-                    st.image(output[0], caption="🖼️ Üretilen Görsel", width=300)
+                    urun["gorsel_url"] = str(output[0])
+                    st.image(str(output[0]), caption="🖼️ Üretilen Görsel", width=300)
                     st.success("✅ Görsel başarıyla üretildi.")
                 except Exception as e:
                     st.error("❌ Replicate Hatası:")
