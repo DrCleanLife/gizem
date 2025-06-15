@@ -3,9 +3,6 @@ import requests
 import json
 import replicate
 from openai import OpenAI
-import replicate
-replicate.Client(api_token=st.secrets["REPLICATE_API_TOKEN"])
-
 
 # API anahtarlarını gizli olarak secrets üzerinden alıyoruz
 openai_client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
@@ -58,24 +55,27 @@ for i, urun in enumerate(st.session_state.urunler):
         st.write("🔍", urun["seo_aciklama"])
 
         # Görsel üret
-        if st.button(f"🖼 Görsel Üret", key=f"gorsel_{i}"):
-            try:
-                with st.spinner("Görsel üretiliyor..."):
-                    output = replicate.run(
-                        "stability-ai/sdxl:ea1f5f63c0e2c1739cdbc6a8d7b5f9058a256ab41f21e5c3335c1a0bfa1e236e",
-                        input={
-                            "prompt": f"{urun['urun_adi']}, {urun['aciklama']}, studio lighting, white background",
-                            "width": 512,
-                            "height": 512,
-                            "num_outputs": 1
-                        }
-                    )
-                    urun["gorsel_url"] = output[0]
-                    st.image(output[0], caption="Üretilen Görsel", width=300)
-                    st.success("✅ Görsel üretildi!")
-            except Exception as e:
-                st.error("❌ Replicate Hatası:")
-                st.code(str(e))
+      import replicate
+replicate_client = replicate.Client(api_token=st.secrets["REPLICATE_API_TOKEN"])
+
+if st.button(f"🖼 Görsel Üret", key=f"gorsel_{i}"):
+    try:
+        with st.spinner("Görsel üretiliyor..."):
+            output = replicate_client.run(
+                "stability-ai/sdxl:ea1f5f63c0e2c1739cdbc6a8d7b5f9058a256ab41f21e5c3335c1a0bfa1e236e",
+                input={
+                    "prompt": f"{urun['urun_adi']}, {urun['aciklama']}, studio lighting, white background",
+                    "num_outputs": 1,
+                    "width": 512,
+                    "height": 512
+                }
+            )
+            urun["gorsel_url"] = output[0]
+            st.image(output[0], caption="🖼 Üretilen Görsel", width=300)
+            st.success("✅ Görsel başarıyla üretildi.")
+    except Exception as e:
+        st.error("❌ Replicate Hatası:")
+        st.code(str(e))
 
         # Shopify’a yükle
         if st.button(f"📦 Shopify’a Yükle", key=f"yukle_{i}"):
